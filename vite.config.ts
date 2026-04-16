@@ -22,8 +22,8 @@ export default defineConfig(({ mode }) => ({
         navigateFallbackDenylist: [/^\/~oauth/],
       },
       manifest: {
-        name: "Spin the Wheel",
-        short_name: "SpinWheel",
+        name: "Decision Wheel",
+        short_name: "DecisionWheel",
         start_url: "/",
         display: "standalone",
         theme_color: "#4F86F7",
