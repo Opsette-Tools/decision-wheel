@@ -78,7 +78,7 @@ const Index: React.FC = () => {
           }}
         >
           <Title level={4} style={{ margin: 0, fontSize: 18 }}>
-            🎡 Spin the Wheel
+            🎡 Decision Wheel
           </Title>
           <Space>
             <SunOutlined style={{ opacity: isDark ? 0.4 : 1 }} />
