@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 
 const COLORS = [
   '#4F86F7', '#FF6B6B', '#51CF66', '#CC5DE8', '#FF922B',
@@ -15,7 +15,11 @@ interface WheelProps {
   isDark: boolean;
 }
 
-const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning, isDark }) => {
+export interface WheelHandle {
+  triggerSpin: () => void;
+}
+
+const Wheel = forwardRef<WheelHandle, WheelProps>(({ options, onSpinEnd, spinning, setSpinning, isDark }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [rotation, setRotation] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
