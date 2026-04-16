@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +7,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -17,13 +19,19 @@ body {
 
 .wheel-pointer {
   position: absolute;
-  top: -18px;
+  top: -16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  font-size: 36px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  font-size: 32px;
+  color: #4F46E5;
+  filter: drop-shadow(0 2px 4px rgba(79,70,229,0.3));
   line-height: 1;
+}
+
+.dark .wheel-pointer {
+  color: #818CF8;
+  filter: drop-shadow(0 2px 4px rgba(129,140,248,0.3));
 }
 
 .wheel-canvas {
@@ -32,6 +40,15 @@ body {
 
 .spinning {
   pointer-events: none;
+}
+
+.spin-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99,102,241,0.4) !important;
+}
+
+.spin-button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .option-item {
@@ -44,15 +61,20 @@ body {
 }
 
 .option-item:hover {
-  background: rgba(0,0,0,0.04);
+  background: rgba(0,0,0,0.03);
 }
 
 .dark .option-item:hover {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.05);
 }
 
 @media (max-width: 768px) {
   .app-layout {
     flex-direction: column !important;
+  }
+  .options-panel {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: none !important;
   }
 }

@@ -1,29 +1,50 @@
 import React, { useState } from 'react';
-import { Input, Button, List, Popconfirm, Typography, Space, message, Empty } from 'antd';
+import { Input, Button, List, Popconfirm, Typography, Space, message, Empty, Tag, Tooltip } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
   ClearOutlined,
-  ThunderboltOutlined,
   EditOutlined,
   CheckOutlined,
   CloseOutlined,
   RetweetOutlined,
+  UndoOutlined,
+  StarOutlined,
 } from '@ant-design/icons';
 
 const { Text } = Typography;
 
-const EXAMPLES = ['Pizza', 'Sushi', 'Tacos', 'Burgers', 'Pasta', 'Salad', 'Ramen', 'Curry'];
+const COLORS = [
+  '#6366F1', '#0EA5E9', '#8B5CF6', '#14B8A6', '#F59E0B',
+  '#EC4899', '#10B981', '#F97316', '#06B6D4', '#A855F7',
+  '#3B82F6', '#EF4444', '#84CC16', '#D946EF', '#0284C7',
+  '#7C3AED', '#059669', '#E11D48', '#2563EB', '#9333EA',
+];
+
+const EXAMPLES = [
+  'Strategy A',
+  'Strategy B',
+  'Option Alpha',
+  'Option Beta',
+  'Plan 1',
+  'Plan 2',
+  'Proposal X',
+  'Proposal Y',
+];
 
 interface OptionsPanelProps {
   options: string[];
   setOptions: (options: string[]) => void;
+  winCounts: Record<string, number>;
+  onClearCounts: () => void;
 }
 
-const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions }) => {
+const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions, winCounts, onClearCounts }) => {
   const [input, setInput] = useState('');
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editValue, setEditValue] = useState('');
+
+  const totalWins = Object.values(winCounts).reduce((s, c) => s + c, 0);
 
   const addOption = () => {
     const trimmed = input.trim();
@@ -76,7 +97,7 @@ const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions }) => {
     <div>
       <Space.Compact style={{ width: '100%', marginBottom: 16 }}>
         <Input
-          placeholder="Add an option…"
+          placeholder="Add an option..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onPressEnter={addOption}
@@ -87,13 +108,13 @@ const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions }) => {
         </Button>
       </Space.Compact>
 
-      <Space wrap style={{ marginBottom: 16 }}>
-        <Button icon={<ThunderboltOutlined />} onClick={loadExamples} size="small">
-          Examples
-        </Button>
-        <Button icon={<RetweetOutlined />} onClick={shuffle} size="small" disabled={options.length < 2}>
-          Shuffle
-        </Button>
+      <Space style={{ marginBottom: 16 }}>
+        <Tooltip title="Load examples">
+          <Button icon={<StarOutlined />} onClick={loadExamples} size="small" />
+        </Tooltip>
+        <Tooltip title="Shuffle">
+          <Button icon={<RetweetOutlined />} onClick={shuffle} size="small" disabled={options.length < 2} />
+        </Tooltip>
         <Popconfirm
           title="Clear all options?"
           onConfirm={() => {
@@ -103,10 +124,22 @@ const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions }) => {
           okText="Yes"
           cancelText="No"
         >
-          <Button icon={<ClearOutlined />} danger size="small" disabled={options.length === 0}>
-            Clear All
-          </Button>
+          <Tooltip title="Clear all">
+            <Button icon={<ClearOutlined />} danger size="small" disabled={options.length === 0} />
+          </Tooltip>
         </Popconfirm>
+        {totalWins > 0 && (
+          <Popconfirm
+            title="Reset all win counts?"
+            onConfirm={onClearCounts}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Reset counts">
+              <Button icon={<UndoOutlined />} size="small" />
+            </Tooltip>
+          </Popconfirm>
+        )}
       </Space>
 
       {options.length === 0 ? (
@@ -128,7 +161,7 @@ const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions }) => {
                         type="text"
                         icon={<CheckOutlined />}
                         onClick={confirmEdit}
-                        style={{ color: '#52c41a' }}
+                        style={{ color: '#10B981' }}
                       />,
                       <Button
                         key="cancel"
@@ -164,22 +197,25 @@ const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, setOptions }) => {
                   style={{ maxWidth: 200 }}
                 />
               ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
                   <div
                     style={{
-                      width: 12,
-                      height: 12,
+                      width: 10,
+                      height: 10,
                       borderRadius: '50%',
-                      background: [
-                        '#4F86F7', '#FF6B6B', '#51CF66', '#CC5DE8', '#FF922B',
-                        '#20C997', '#F06595', '#FCC419', '#339AF0', '#FF8787',
-                        '#69DB7C', '#DA77F2', '#FFA94D', '#38D9A9', '#E599F7',
-                        '#FFD43B', '#74C0FC', '#FF6B6B', '#8CE99A', '#B197FC',
-                      ][index % 20],
+                      background: COLORS[index % COLORS.length],
                       flexShrink: 0,
                     }}
                   />
-                  <Text>{item}</Text>
+                  <Text ellipsis style={{ flex: 1, minWidth: 0 }}>{item}</Text>
+                  {(winCounts[item] || 0) > 0 && (
+                    <Tag
+                      color="purple"
+                      style={{ marginInlineEnd: 0, fontSize: 11, lineHeight: '18px', padding: '0 6px' }}
+                    >
+                      {winCounts[item]}
+                    </Tag>
+                  )}
                 </div>
               )}
             </List.Item>

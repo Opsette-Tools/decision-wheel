@@ -1,10 +1,27 @@
 import React, { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 
+// Elegant, muted palette — professional but distinct
 const COLORS = [
-  '#4F86F7', '#FF6B6B', '#51CF66', '#CC5DE8', '#FF922B',
-  '#20C997', '#F06595', '#FCC419', '#339AF0', '#FF8787',
-  '#69DB7C', '#DA77F2', '#FFA94D', '#38D9A9', '#E599F7',
-  '#FFD43B', '#74C0FC', '#FF6B6B', '#8CE99A', '#B197FC',
+  '#6366F1', // Indigo
+  '#0EA5E9', // Sky blue
+  '#8B5CF6', // Violet
+  '#14B8A6', // Teal
+  '#F59E0B', // Amber
+  '#EC4899', // Pink
+  '#10B981', // Emerald
+  '#F97316', // Orange
+  '#06B6D4', // Cyan
+  '#A855F7', // Purple
+  '#3B82F6', // Blue
+  '#EF4444', // Red (muted)
+  '#84CC16', // Lime
+  '#D946EF', // Fuchsia
+  '#0284C7', // Dark sky
+  '#7C3AED', // Deep violet
+  '#059669', // Deep emerald
+  '#E11D48', // Rose
+  '#2563EB', // Royal blue
+  '#9333EA', // Deep purple
 ];
 
 interface WheelProps {
@@ -62,7 +79,7 @@ const Wheel = forwardRef<WheelHandle, WheelProps>(({ options, onSpinEnd, spinnin
       ctx.fillStyle = COLORS[i % COLORS.length];
       ctx.fill();
 
-      ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.6)';
+      ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.7)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -71,26 +88,27 @@ const Wheel = forwardRef<WheelHandle, WheelProps>(({ options, onSpinEnd, spinnin
       ctx.rotate(startAngle + segAngle / 2);
       ctx.textAlign = 'right';
       ctx.fillStyle = '#fff';
-      ctx.font = `bold ${Math.max(10, Math.min(16, 200 / options.length))}px -apple-system, sans-serif`;
-      ctx.shadowColor = 'rgba(0,0,0,0.5)';
+      ctx.font = `600 ${Math.max(10, Math.min(15, 200 / options.length))}px Inter, -apple-system, sans-serif`;
+      ctx.shadowColor = 'rgba(0,0,0,0.4)';
       ctx.shadowBlur = 3;
       const maxLen = r - 20;
       let text = opt;
       if (ctx.measureText(text).width > maxLen - 10) {
-        while (ctx.measureText(text + '…').width > maxLen - 10 && text.length > 1) {
+        while (ctx.measureText(text + '...').width > maxLen - 10 && text.length > 1) {
           text = text.slice(0, -1);
         }
-        text += '…';
+        text += '...';
       }
       ctx.fillText(text, r - 14, 5);
       ctx.restore();
     });
 
+    // Center circle
     ctx.beginPath();
     ctx.arc(cx, cy, Math.max(18, r * 0.1), 0, 2 * Math.PI);
-    ctx.fillStyle = isDark ? '#1f1f1f' : '#fff';
+    ctx.fillStyle = isDark ? '#1E1B4B' : '#fff';
     ctx.fill();
-    ctx.strokeStyle = isDark ? '#444' : '#ddd';
+    ctx.strokeStyle = isDark ? '#4338CA' : '#E2E8F0';
     ctx.lineWidth = 3;
     ctx.stroke();
   }, [options, size, isDark]);
@@ -125,7 +143,7 @@ const Wheel = forwardRef<WheelHandle, WheelProps>(({ options, onSpinEnd, spinnin
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
       <div ref={containerRef} className="wheel-container">
-        <div className="wheel-pointer">▼</div>
+        <div className="wheel-pointer">&#9660;</div>
         <canvas
           ref={canvasRef}
           className="wheel-canvas"
@@ -133,29 +151,31 @@ const Wheel = forwardRef<WheelHandle, WheelProps>(({ options, onSpinEnd, spinnin
             transform: `rotate(${rotation}deg)`,
             borderRadius: '50%',
             boxShadow: isDark
-              ? '0 8px 32px rgba(0,0,0,0.5)'
-              : '0 8px 32px rgba(0,0,0,0.12)',
+              ? '0 8px 32px rgba(0,0,0,0.5), 0 0 0 3px rgba(99,102,241,0.3)'
+              : '0 8px 32px rgba(0,0,0,0.10), 0 0 0 3px rgba(99,102,241,0.15)',
           }}
         />
       </div>
       <button
         onClick={spin}
         disabled={spinning || options.length < 2}
+        className="spin-button"
         style={{
           padding: '14px 56px',
-          fontSize: 20,
-          fontWeight: 700,
-          borderRadius: 12,
+          fontSize: 18,
+          fontWeight: 600,
+          letterSpacing: '0.02em',
+          borderRadius: 10,
           border: 'none',
           cursor: spinning || options.length < 2 ? 'not-allowed' : 'pointer',
-          background: spinning ? '#999' : 'linear-gradient(135deg, #4F86F7, #339AF0)',
+          background: spinning ? '#94A3B8' : 'linear-gradient(135deg, #6366F1, #8B5CF6)',
           color: '#fff',
-          boxShadow: '0 4px 16px rgba(79,134,247,0.3)',
+          boxShadow: spinning ? 'none' : '0 4px 16px rgba(99,102,241,0.35)',
           transition: 'all 0.2s',
           opacity: options.length < 2 ? 0.5 : 1,
         }}
       >
-        {spinning ? 'Spinning…' : '🎯 Spin'}
+        {spinning ? 'Spinning...' : 'Spin'}
       </button>
     </div>
   );
