@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useImperativeHandle, forwardRef } from 'react';
 
 const COLORS = [
   '#4F86F7', '#FF6B6B', '#51CF66', '#CC5DE8', '#FF922B',
@@ -15,7 +15,11 @@ interface WheelProps {
   isDark: boolean;
 }
 
-const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning, isDark }) => {
+export interface WheelHandle {
+  triggerSpin: () => void;
+}
+
+const Wheel = forwardRef<WheelHandle, WheelProps>(({ options, onSpinEnd, spinning, setSpinning, isDark }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [rotation, setRotation] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,12 +62,10 @@ const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning
       ctx.fillStyle = COLORS[i % COLORS.length];
       ctx.fill();
 
-      // border between segments
       ctx.strokeStyle = isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.6)';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // text
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(startAngle + segAngle / 2);
@@ -84,7 +86,6 @@ const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning
       ctx.restore();
     });
 
-    // center circle
     ctx.beginPath();
     ctx.arc(cx, cy, Math.max(18, r * 0.1), 0, 2 * Math.PI);
     ctx.fillStyle = isDark ? '#1f1f1f' : '#fff';
@@ -108,22 +109,18 @@ const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning
     setRotation(newRotation);
 
     setTimeout(() => {
-      // Determine winner: pointer is at top (270° in standard canvas coords)
-      // The wheel rotates clockwise via CSS transform
       const normalizedAngle = ((newRotation % 360) + 360) % 360;
       const segDeg = 360 / options.length;
-      // pointer at top = 0° of rotation display, segments start at right (0°/3 o'clock on canvas)
-      // CSS rotation: segment at top corresponds to (360 - normalizedAngle) mod 360 from canvas 0°
-      // But pointer is at top, so we need the segment at (270° - normalizedAngle) in canvas terms
-      // Simpler: after rotation R degrees clockwise, the segment under the top pointer is:
-      // Pointer is at top (270° in canvas coords). After clockwise rotation R,
-      // the canvas angle under the pointer is (270 - R).
       const canvasAngle = ((270 - normalizedAngle) % 360 + 360) % 360;
       const idx = Math.floor(canvasAngle / segDeg) % options.length;
       onSpinEnd(options[idx], idx);
       setSpinning(false);
     }, 4200);
   }, [spinning, options, rotation, onSpinEnd, setSpinning]);
+
+  useImperativeHandle(ref, () => ({
+    triggerSpin: spin,
+  }), [spin]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
@@ -162,6 +159,6 @@ const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning
       </button>
     </div>
   );
-};
+});
 
 export default Wheel;

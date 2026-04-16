@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { ConfigProvider, theme, Layout, Card, Switch, Typography, Space } from 'antd';
 import { MoonOutlined, SunOutlined } from '@ant-design/icons';
-import Wheel from '../components/Wheel';
+import Wheel, { WheelHandle } from '../components/Wheel';
 import OptionsPanel from '../components/OptionsPanel';
 import ResultModal from '../components/ResultModal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
@@ -16,6 +16,8 @@ const Index: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
   const [resultIndex, setResultIndex] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
+  const [pendingSpin, setPendingSpin] = useState(false);
+  const wheelRef = useRef<WheelHandle>(null);
 
   const handleSpinEnd = useCallback((winner: string, index: number) => {
     setResult(winner);
@@ -25,6 +27,7 @@ const Index: React.FC = () => {
 
   const handleSpinAgain = () => {
     setShowResult(false);
+    setPendingSpin(true);
   };
 
   const handleRemoveAndSpin = () => {
@@ -32,7 +35,19 @@ const Index: React.FC = () => {
       setOptions(options.filter((_, i) => i !== resultIndex));
     }
     setShowResult(false);
+    setPendingSpin(true);
   };
+
+  // Trigger spin after modal closes and wheel re-renders
+  useEffect(() => {
+    if (pendingSpin && !showResult && !spinning) {
+      const timer = setTimeout(() => {
+        wheelRef.current?.triggerSpin();
+        setPendingSpin(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [pendingSpin, showResult, spinning]);
 
   return (
     <ConfigProvider
@@ -87,6 +102,7 @@ const Index: React.FC = () => {
           >
             <div style={{ flex: '1 1 auto', display: 'flex', justifyContent: 'center' }}>
               <Wheel
+                ref={wheelRef}
                 options={options}
                 onSpinEnd={handleSpinEnd}
                 spinning={spinning}
