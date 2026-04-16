@@ -116,11 +116,10 @@ const Wheel: React.FC<WheelProps> = ({ options, onSpinEnd, spinning, setSpinning
       // CSS rotation: segment at top corresponds to (360 - normalizedAngle) mod 360 from canvas 0°
       // But pointer is at top, so we need the segment at (270° - normalizedAngle) in canvas terms
       // Simpler: after rotation R degrees clockwise, the segment under the top pointer is:
-      const pointerAngle = (360 - (normalizedAngle % 360) + 360) % 360;
-      // canvas draws from 3 o'clock, pointer is at 12 o'clock = 270° in canvas
-      // offset by 90° because pointer is at top but canvas 0° is at right
-      const adjusted = (pointerAngle + 90) % 360;
-      const idx = Math.floor(adjusted / segDeg) % options.length;
+      // Pointer is at top (270° in canvas coords). After clockwise rotation R,
+      // the canvas angle under the pointer is (270 - R).
+      const canvasAngle = ((270 - normalizedAngle) % 360 + 360) % 360;
+      const idx = Math.floor(canvasAngle / segDeg) % options.length;
       onSpinEnd(options[idx], idx);
       setSpinning(false);
     }, 4200);
