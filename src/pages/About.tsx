@@ -69,6 +69,11 @@ const About: React.FC = () => {
           <Paragraph type="secondary" style={{ textAlign: 'center', fontSize: 12, marginTop: 24 }}>
             All data stays in your browser — nothing is sent to any server.
           </Paragraph>
+
+          <Paragraph type="secondary" style={{ textAlign: 'center', fontSize: 12, marginTop: 8 }}>
+            A business tool from Opsette Marketplace. Find more tools at{' '}
+            <a href="https://opsette.io" target="_blank" rel="noopener noreferrer">opsette.io</a>.
+          </Paragraph>
         </Typography>
       </div>
     </div>

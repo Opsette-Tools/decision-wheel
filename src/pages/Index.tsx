@@ -183,6 +183,19 @@ const Index: React.FC = () => {
             >
               Privacy
             </button>
+            <span>
+              By{' '}
+              <a
+                href="https://opsette.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'underline' }}
+                onMouseEnter={e => (e.currentTarget.style.color = isDark ? '#C4B5FD' : '#6366F1')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'inherit')}
+              >
+                Opsette
+              </a>
+            </span>
           </Space>
         </Footer>
 
