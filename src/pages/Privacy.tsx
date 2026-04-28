@@ -2,8 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Typography } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { OpsetteFooterLogo } from '@/components/opsette-share';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 const Privacy: React.FC = () => {
   const navigate = useNavigate();
@@ -46,6 +47,8 @@ const Privacy: React.FC = () => {
             If you have questions about this policy, you can reach us through the app's repository.
           </Paragraph>
         </Typography>
+
+        <OpsetteFooterLogo />
       </div>
     </div>
   );

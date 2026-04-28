@@ -6,6 +6,7 @@ import Wheel, { WheelHandle } from '../components/Wheel';
 import OptionsPanel from '../components/OptionsPanel';
 import ResultModal from '../components/ResultModal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { ShareAppButton } from '@/components/opsette-share';
 
 const { Header, Content, Footer } = Layout;
 const { Title } = Typography;
@@ -111,6 +112,8 @@ const Index: React.FC = () => {
               />
               <MoonOutlined style={{ opacity: isDark ? 1 : 0.4, fontSize: 13, color: isDark ? '#C4B5FD' : '#94A3B8' }} />
             </div>
+
+            <ShareAppButton size={32} />
           </div>
         </Header>
 
