@@ -1,11 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <circle cx="32" cy="32" r="30" fill="#6366F1" stroke="#4F46E5" stroke-width="2"/>
-  <path d="M32 2 A30 30 0 0 1 58.98 17L32 32Z" fill="#818CF8"/>
-  <path d="M58.98 17 A30 30 0 0 1 58.98 47L32 32Z" fill="#A78BFA"/>
-  <path d="M58.98 47 A30 30 0 0 1 32 62L32 32Z" fill="#C084FC"/>
-  <path d="M32 62 A30 30 0 0 1 5.02 47L32 32Z" fill="#E879F9"/>
-  <path d="M5.02 47 A30 30 0 0 1 5.02 17L32 32Z" fill="#8B5CF6"/>
-  <path d="M5.02 17 A30 30 0 0 1 32 2L32 32Z" fill="#7C3AED"/>
-  <circle cx="32" cy="32" r="8" fill="white" stroke="#E2E8F0" stroke-width="1.5"/>
-  <polygon points="32,0 28,10 36,10" fill="#4F46E5"/>
-</svg>
+<svg color="#2f4f46" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M33.6,145.5A96,96,0,0,1,96,37.5v72Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M128,128.42V32A96,96,0,1,1,45.22,176.64Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>
